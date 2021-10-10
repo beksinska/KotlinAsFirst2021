@@ -2,7 +2,7 @@
 
 package lesson3.task1
 
-import kotlin.math.sqrt
+import kotlin.math.*
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -17,7 +17,7 @@ import kotlin.math.sqrt
 fun factorial(n: Int): Double {
     var result = 1.0
     for (i in 1..n) {
-        result = result * i // Please do not fix in master
+        result *= i // Please do not fix in master
     }
     return result
 }
@@ -72,7 +72,11 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int =
+    when {
+        n / 10 == 0 -> 1
+        else -> digitNumber(n / 10) + 1
+}
 
 /**
  * Простая (2 балла)
@@ -192,7 +196,20 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var length = 0
+    var number = 0
+    while (length < n) {
+        number++
+        length += digitNumber(number * number)
+    }
+    number *= number
+    while (length > n) {
+        length--
+        number /= 10
+    }
+    return number % 10
+}
 
 /**
  * Сложная (5 баллов)
