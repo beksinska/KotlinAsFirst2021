@@ -198,6 +198,7 @@ fun factorizeToString(n: Int): String = TODO()
 fun convert(n: Int, base: Int): List<Int>  {
     var remainder = n
     val result = mutableListOf<Int>()
+    if (remainder == 0) return listOf(0)
     while (remainder != 0) {
         result.add(remainder % base)
         remainder = remainder.div(base)
@@ -219,6 +220,7 @@ fun convert(n: Int, base: Int): List<Int>  {
 fun convertToString(n: Int, base: Int): String {
     val result = convert(n, base)
     val chars = mutableListOf<Char>()
+    if (n == 0) return "0"
     for (element in result) {
         if (element >= 10)
             chars.add((element + 87).toChar())
