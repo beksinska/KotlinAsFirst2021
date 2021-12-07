@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.NumberFormatException
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +76,38 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = listOf<String>(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    var day: Int
+    var month: Int
+    var year: Int
+    val parts = str.split(" ")
+    if (parts.size !=3) return ""
+    day = parts[0].toInt()
+    year = parts[2].toInt()
+    month = if (parts[1] in months) months.indexOf(parts[1]) + 1 else return ""
+    when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> if (day > 31 || day < 1) return ""
+        2 -> if (day > 28 || day < 1) return ""
+        4, 6, 9, 11 -> if (day > 30 || day < 1) return ""
+        else -> return ""
+    }
+    return String.format("%02d.%02d.%d", day, month, year)
+}
+//🥰//
 
 /**
  * Средняя (4 балла)
@@ -86,7 +119,46 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = listOf<String>(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    var day: Int
+    var month: String
+    var year: Int
+    val parts = digital.split(".")
+    if (parts.size !=3) return ""
+    try {
+        day = parts[0].toInt()
+        year = parts[2].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    try {
+        month = months[parts[1].toInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        return ""
+    }
+    when (parts[1].toInt()) {
+        1, 3, 5, 7, 8, 10, 12 -> if (day > 31 || day < 1) return ""
+        2 -> if (day > 28 || day < 1) return ""
+        4, 6, 9, 11 -> if (day > 30 || day < 1) return ""
+        else -> return ""
+    }
+    return String.format("%d %s %d", day, month, year)
+}
 
 /**
  * Средняя (4 балла)
