@@ -155,7 +155,8 @@ fun dateDigitToStr(digital: String): String {
     }
     when (parts[1].toInt()) {
         1, 3, 5, 7, 8, 10, 12 -> if (day > 31 || day < 1) return ""
-        2 -> if (((year % 4 == 0) || (year % 100 == 0 && year % 400 == 0)) && day > 29 || day < 1) return ""
+        2 -> if ((year % 4 == 0 && day > 29 || day < 1) || (year % 100 == 0 && year % 400 == 0 && day > 29 || day < 1))
+            return ""
         else if (day > 28 || day < 1) return ""
         4, 6, 9, 11 -> if (day > 30 || day < 1) return ""
         else -> return ""
