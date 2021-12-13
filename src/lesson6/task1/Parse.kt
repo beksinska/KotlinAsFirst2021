@@ -77,7 +77,7 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val months = listOf<String>(
+    val months = listOf(
         "января",
         "февраля",
         "марта",
@@ -95,14 +95,14 @@ fun dateStrToDigit(str: String): String {
     var month: Int
     var year: Int
     val parts = str.split(" ")
-    if (parts.size !=3) return ""
+    if (parts.size != 3) return ""
     day = parts[0].toInt()
     year = parts[2].toInt()
     month = if (parts[1] in months) months.indexOf(parts[1]) + 1 else return ""
     when (month) {
         1, 3, 5, 7, 8, 10, 12 -> if (day > 31 || day < 1) return ""
-        2 ->  if ((year % 4 == 0 && year % 100 != 0) || (year % 100 == 0 && year % 400 == 0) && (day > 29 || day < 1)) return ""
-    else if (day > 28 || day < 1) return ""
+        2 -> if (((year % 4 == 0) || (year % 100 == 0 && year % 400 == 0)) && day > 29 || day < 1) return ""
+        else if (day > 28 || day < 1) return ""
         4, 6, 9, 11 -> if (day > 30 || day < 1) return ""
         else -> return ""
     }
@@ -139,7 +139,7 @@ fun dateDigitToStr(digital: String): String {
     var month: String
     var year: Int
     val parts = digital.split(".")
-    if (parts.size !=3) return ""
+    if (parts.size != 3) return ""
     try {
         day = parts[0].toInt()
         year = parts[2].toInt()
@@ -154,8 +154,8 @@ fun dateDigitToStr(digital: String): String {
     }
     when (parts[1].toInt()) {
         1, 3, 5, 7, 8, 10, 12 -> if (day > 31 || day < 1) return ""
-        2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 100 == 0 && year % 400 == 0) && (day > 29 || day < 1)) return ""
-    else if (day > 28 || day < 1) return ""
+        2 -> if (((year % 4 == 0) || (year % 100 == 0 && year % 400 == 0)) && day > 29 || day < 1) return ""
+        else if (day > 28 || day < 1) return ""
         4, 6, 9, 11 -> if (day > 30 || day < 1) return ""
         else -> return ""
     }
