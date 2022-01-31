@@ -146,7 +146,6 @@ fun dateDigitToStr(digital: String): String {
     } catch (e: NumberFormatException) {
         return ""
     }
-
     try {
         month = months[parts[1].toInt() - 1]
     } catch (e: IndexOutOfBoundsException) {
