@@ -109,7 +109,6 @@ fun dateStrToDigit(str: String): String {
     }
     return String.format("%02d.%02d.%d", day, month, year)
 }
-//🥰//
 
 /**
  * Средняя (4 балла)
