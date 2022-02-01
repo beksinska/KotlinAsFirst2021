@@ -137,7 +137,7 @@ fun centerFile(inputName: String, outputName: String) {
     PrintStream(outputName).use { printStream ->
         File(inputName).forEachLine { line ->
             val currentLineLength = line.trim().length
-            printStream.println(" ".repeat((maxLine - currentLineLength) / 2) + line)
+            printStream.println(" ".repeat((maxLine - currentLineLength) / 2) + line.trim())
         }
     }
 }
