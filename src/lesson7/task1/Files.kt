@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import java.io.PrintStream
+
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -109,11 +111,18 @@ fun sibilants(inputName: String, outputName: String) {
  * 1) Пробелы в начале и в конце всех строк не следует сохранять.
  * 2) В случае невозможности выравнивания строго по центру, строка должна быть сдвинута в ЛЕВУЮ сторону
  * 3) Пустые строки не являются особым случаем, их тоже следует выравнивать
- * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
+ * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых).
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readText()
+    val maxLine = text.lines().maxOf { it.trim().length }
+    PrintStream(outputName).use { printStream ->
+        File(inputName).forEachLine { line ->
+            val currentLineLength = line.trim().length
+            printStream.println(" ".repeat((maxLine - currentLineLength) / 2) + line)
+        }
+    }
 }
 
 /**
