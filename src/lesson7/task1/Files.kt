@@ -94,20 +94,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val mistakes = Regex("""[жчшщ][ыяю]""", RegexOption.IGNORE_CASE)
-    val consonants = listOf('ж', 'ч', 'ш', 'щ', 'Ж', 'Ч', 'Ш', 'Щ')
-    val vowels = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
+    val vowels = mapOf("ы" to "и", "Ы" to "И", "я" to "а", "Я" to "А", "ю" to "у", "Ю" to "У")
     val res = StringBuilder()
-    var firstChar = '0'
     File(inputName).readLines().forEach() { line ->
-        if (mistakes.containsMatchIn(line)) {
-            for (i in line) {
-                if (firstChar in consonants && i in vowels) res.append(vowels[i])
-                else res.append(i)
-                firstChar = i
-            }
-            res.appendLine()
-        } else res.appendLine(line)
+        val mistakes = Regex("""[жчшщ][ыяю]""", RegexOption.IGNORE_CASE).findAll(line)
+        var currentLine = line
+        for (i in mistakes) {
+            val i = i.range.last
+            val char = currentLine[i].toString()
+            currentLine = currentLine.replaceRange(i..i, vowels[char]!!)
+        }
+        res.appendLine(currentLine)
     }
     File(outputName).writeText(res.toString())
 }
