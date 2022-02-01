@@ -98,13 +98,13 @@ fun sibilants(inputName: String, outputName: String) {
     val consonants = listOf('ж', 'ч', 'ш', 'щ', 'Ж', 'Ч', 'Ш', 'Щ')
     val vowels = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
     val res = StringBuilder()
-    var last = '0'
+    var firstChar = '0'
     File(inputName).readLines().forEach() { line ->
         if (mistakes.containsMatchIn(line)) {
             for (i in line) {
-                if (last in consonants && i in vowels) res.append(vowels[i])
+                if (firstChar in consonants && i in vowels) res.append(vowels[i])
                 else res.append(i)
-                last = i
+                firstChar = i
             }
             res.appendLine()
         } else res.appendLine(line)
