@@ -441,4 +441,18 @@ Basic, Ruby, Swift.
 
         File("temp.txt").delete()
     }
+
+    @Test
+    fun textToSets() {
+        textToSets("input/jsdvjbv.txt", "input/expr_textToSets.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """[24, 9, 17, 9, 7, -1, 48, 28, 40, -5, -1, 15, 19]"""
+        )
+        File("temp.txt").delete()
+    }
 }
+
+
+
+

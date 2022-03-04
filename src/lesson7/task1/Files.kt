@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import java.io.BufferedWriter
 import java.io.File
 import java.io.PrintStream
 
@@ -474,5 +475,21 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
+}
+
+fun textToSets(inputName: String, expr: String, outputName: String) {
+    var res = StringBuilder()
+    val map = mutableMapOf<String, List<String>>()
+    File(inputName).readLines().forEach() { line ->
+        val parts = line.split(" = ")
+        val name = parts[0]
+        val list = parts[1].toList()
+        map[parts[0]] = map.getOrDefault(parts[0], parts[1].splitToSequence(", ").toList())
+    }
+    val expr = File(expr).readText().split(" & ")
+    val firstSet = expr[0]
+    val secondSet = expr[1]
+    res.appendLine(map.getValue(firstSet) + map.getValue(secondSet))
+    File(outputName).writeText(res.toString())
 }
 
