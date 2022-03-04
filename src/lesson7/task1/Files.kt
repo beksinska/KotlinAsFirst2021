@@ -492,4 +492,5 @@ fun textToSets(inputName: String, expr: String, outputName: String) {
     res.appendLine(map.getValue(firstSet) + map.getValue(secondSet))
     File(outputName).writeText(res.toString())
 }
+///
 
