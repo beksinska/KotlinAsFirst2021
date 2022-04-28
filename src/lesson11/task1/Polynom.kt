@@ -2,6 +2,8 @@
 
 package lesson11.task1
 
+import kotlin.math.pow
+
 /**
  * Класс "полином с вещественными коэффициентами".
  *
@@ -20,16 +22,23 @@ package lesson11.task1
  * Старшие коэффициенты, равные нулю, игнорировать, например Polynom(0.0, 0.0, 5.0, 3.0) соответствует 5x+3
  */
 class Polynom(vararg coeffs: Double) {
+    private val listOfCoeffs = coeffs.toList().reversed()
 
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
-    fun coeff(i: Int): Double = TODO()
+    fun coeff(i: Int): Double = listOfCoeffs[i]
 
     /**
      * Расчёт значения при заданном x
      */
-    fun getValue(x: Double): Double = TODO()
+    fun getValue(x: Double): Double {
+        var res = 0.0
+        for (i in 0..listOfCoeffs.lastIndex) {
+            res += listOfCoeffs[i] * x.pow(i)
+        }
+        return res
+    }
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -38,27 +47,72 @@ class Polynom(vararg coeffs: Double) {
      * Слагаемые с нулевыми коэффициентами игнорировать, т.е.
      * степень 0x^2+0x+2 также равна 0.
      */
-    fun degree(): Int = TODO()
+    fun degree(): Int {
+        var res = 0
+        for (i in 0..listOfCoeffs.lastIndex) {
+            if (listOfCoeffs[i] != 0.0) res = i
+        }
+        return res
+    }
 
     /**
      * Сложение
      */
-    operator fun plus(other: Polynom): Polynom = TODO()
+    operator fun plus(other: Polynom): Polynom {
+        val res = mutableListOf<Double>()
+        val min = minOf(other.degree(), listOfCoeffs.lastIndex)
+        for (i in 0..min) {
+            res += other.coeff(i) + listOfCoeffs[i]
+        }
+        if (min == listOfCoeffs.lastIndex) {
+            for (i in listOfCoeffs.lastIndex + 1..other.degree())
+                res += other.coeff(i)
+        } else {
+            for (i in other.degree() + 1..listOfCoeffs.lastIndex)
+                res += listOfCoeffs[i]
+        }
+        return Polynom(*res.reversed().toDoubleArray())
+    }
+
 
     /**
      * Смена знака (при всех слагаемых)
      */
-    operator fun unaryMinus(): Polynom = TODO()
+    operator fun unaryMinus(): Polynom {
+        var res = doubleArrayOf()
+        listOfCoeffs.reversed().forEach { item ->
+            res += item * (-1)
+        }
+        return Polynom(*res)
+    }
 
     /**
      * Вычитание
      */
-    operator fun minus(other: Polynom): Polynom = TODO()
+    operator fun minus(other: Polynom): Polynom = this + (-other)
 
     /**
      * Умножение
      */
-    operator fun times(other: Polynom): Polynom = TODO()
+    operator fun times(other: Polynom): Polynom {
+        val coeffs = listOfCoeffs.toMutableList()
+        val otherCoeffs = other.listOfCoeffs.toMutableList()
+        val max = (coeffs.size - 1) + (otherCoeffs.size - 1)
+        var listOfCalculations = doubleArrayOf()
+        while (listOfCalculations.size != max + 1) {
+            listOfCalculations += 0.0
+        }
+        coeffs.forEachIndexed { ind1, c1 ->
+            otherCoeffs.forEachIndexed { ind2, c2 ->
+                listOfCalculations[ind1 + ind2] += c1 * c2
+            }
+        }
+        var res = doubleArrayOf()
+        listOfCalculations.reversed().forEach { now ->
+            res += now
+        }
+        return Polynom(*res)
+    }
 
     /**
      * Деление
