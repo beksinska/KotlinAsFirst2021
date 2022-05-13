@@ -25,28 +25,95 @@ class OpenHashSet<T>(val capacity: Int) {
     /**
      * Число элементов в хеш-таблице
      */
-    val size: Int get() = TODO()
+    val size: Int
+        get() {
+            when (capacity) {
+                0 -> {
+                    return 0
+                }
+                else -> {
+                    for (index in 0 until capacity) {
+                        when {
+                            elements[index] == null -> {
+                                return index
+                            }
+                        }
+                    }
+                    return capacity
+                }
+            }
+        }
 
     /**
      * Признак пустоты
      */
-    fun isEmpty(): Boolean = TODO()
+    fun isEmpty(): Boolean = size == 0
 
     /**
      * Добавление элемента.
      * Вернуть true, если элемент был успешно добавлен,
      * или false, если такой элемент уже был в таблице, или превышена вместимость таблицы.
      */
-    fun add(element: T): Boolean = TODO()
+
+    fun add(element: T): Boolean {
+        for (index in 0 until capacity) {
+            when {
+                elements[index] == null -> {
+                    elements[index] = element
+                    return true
+                }
+                elements[index] == element -> {
+                    return false
+                }
+            }
+        }
+        return false
+    }
 
     /**
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
-    operator fun contains(element: T): Boolean = TODO()
+    operator fun contains(element: T): Boolean {
+        for (index in 0 until capacity) {
+            when {
+                elements[index] == element -> {
+                    return true
+                }
+                elements[index] == null -> {
+                    return false
+                }
+            }
+
+        }
+        return false
+    }
 
     /**
      * Таблицы равны, если в них одинаковое количество элементов,
      * и любой элемент из второй таблицы входит также и в первую
      */
-    override fun equals(other: Any?): Boolean = TODO()
+    override fun equals(other: Any?): Boolean {
+        if (other !is OpenHashSet<*> || size != other.size) {
+            return false
+        }
+        for (index in 0 until size) {
+            when {
+                elements[index] != other.elements[index] -> {
+                    return false
+                }
+            }
+
+        }
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = 0
+        for (element in elements) {
+            if (element != null) {
+                result += element.hashCode()
+            }
+        }
+        return result
+    }
 }
