@@ -122,20 +122,46 @@ class Polynom(vararg coeffs: Double) {
      *
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
-    operator fun div(other: Polynom): Polynom = TODO()
+    operator fun div(other: Polynom): Polynom {
+        var answer = mutableListOf<Double>()
+        var res = Polynom()
+        var dividend = Polynom(*(this.listOfCoeffs.toList()).toDoubleArray())
+        val divider = Polynom(*(other.listOfCoeffs.toList()).toDoubleArray())
+        var i = dividend.degree() - divider.degree()
+        while (i + 1 > 0) {
+            var degreeOfAnswer = dividend.degree() - divider.degree()
+            dividend = Polynom(*(dividend.listOfCoeffs.toList()).toDoubleArray())
+            answer += dividend.listOfCoeffs.toList()[0] / divider.listOfCoeffs.toList()[0]
+            while (degreeOfAnswer > 0) {
+                degreeOfAnswer -= 1
+            }
+            res += Polynom(*answer.toDoubleArray())
+            dividend -= divider * Polynom(*answer.toDoubleArray())
+            i -= 1
+        }
+        return res
+    }
+
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: Polynom): Polynom = TODO()
+    operator fun rem(other: Polynom): Polynom = this - (other * (this / other))
 
-    /**
-     * Сравнение на равенство
-     */
-    override fun equals(other: Any?): Boolean = TODO()
 
-    /**
-     * Получение хеш-кода
-     */
-    override fun hashCode(): Int = TODO()
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Polynom
+
+        if (listOfCoeffs != other.listOfCoeffs) return false
+
+        return true
+    }
+
+
+    override fun hashCode(): Int = listOfCoeffs.hashCode()
+
+
 }
