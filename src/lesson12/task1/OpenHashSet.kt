@@ -74,12 +74,12 @@ class OpenHashSet<T>(val capacity: Int) {
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
     operator fun contains(element: T): Boolean {
-        for (index in 0 until capacity) {
+        for (i in 0 .. capacity + 1) {
             when {
-                elements[index] == element -> {
+                elements[i] == element -> {
                     return true
                 }
-                elements[index] == null -> {
+                elements[i] == null -> {
                     return false
                 }
             }

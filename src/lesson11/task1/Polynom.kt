@@ -123,17 +123,15 @@ class Polynom(vararg coeffs: Double) {
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
     operator fun div(other: Polynom): Polynom {
-        var answer = mutableListOf<Double>()
-        var res = Polynom()
-        var dividend = Polynom(*(this.listOfCoeffs.toList()).toDoubleArray())
-        val divider = Polynom(*(other.listOfCoeffs.toList()).toDoubleArray())
-        var i = dividend.degree() - divider.degree()
-        while (i + 1 > 0) {
-            var degreeOfAnswer = dividend.degree() - divider.degree()
-            dividend = Polynom(*(dividend.listOfCoeffs.toList()).toDoubleArray())
-            answer += dividend.listOfCoeffs.toList()[0] / divider.listOfCoeffs.toList()[0]
-            while (degreeOfAnswer > 0) {
-                degreeOfAnswer -= 1
+        if (this.degree() < other.degree()) return Polynom(0.0)
+        var res = mutableListOf<Double>()
+        val dividend = listOfCoeffs.toDoubleArray()
+        for (i in 0..this.degree() - other.degree()) {
+            val degreeOfAnswer = dividend[i] / other.coeff()
+            res.add(degreeOfAnswer)
+            val curSubtrahend = DoubleArray(other.degree() + 1)
+            for (i in 0..curSubtrahend.size) {
+                curSubtrahend = other.[other.degree() - i] * curSubtrahend
             }
             res += Polynom(*answer.toDoubleArray())
             dividend -= divider * Polynom(*answer.toDoubleArray())
