@@ -21,7 +21,7 @@ import kotlin.math.pow
  * Нули в середине и в конце пропускаться не должны, например: x^3+2x+1 --> Polynom(1.0, 2.0, 0.0, 1.0)
  * Старшие коэффициенты, равные нулю, игнорировать, например Polynom(0.0, 0.0, 5.0, 3.0) соответствует 5x+3
  */
-class Polynom(vararg coeffs: Double) {
+class Polynom(private vararg val coeffs: Double) {
     private val listOfCoeffs = coeffs.toList().reversed()
 
     /**
@@ -95,14 +95,14 @@ class Polynom(vararg coeffs: Double) {
      * Умножение
      */
     operator fun times(other: Polynom): Polynom {
-        val coeffs = listOfCoeffs.toMutableList()
+        val thisCoeffs = listOfCoeffs.toMutableList()
         val otherCoeffs = other.listOfCoeffs.toMutableList()
-        val max = (coeffs.size - 1) + (otherCoeffs.size - 1)
+        val max = (thisCoeffs.size - 1) + (otherCoeffs.size - 1)
         var listOfCalculations = doubleArrayOf()
         while (listOfCalculations.size != max + 1) {
             listOfCalculations += 0.0
         }
-        coeffs.forEachIndexed { ind1, c1 ->
+        thisCoeffs.forEachIndexed { ind1, c1 ->
             otherCoeffs.forEachIndexed { ind2, c2 ->
                 listOfCalculations[ind1 + ind2] += c1 * c2
             }
@@ -123,21 +123,23 @@ class Polynom(vararg coeffs: Double) {
      * Если A / B = C и A % B = D, то A = B * C + D и степень D меньше степени B
      */
     operator fun div(other: Polynom): Polynom {
-        if (this.degree() < other.degree()) return Polynom(0.0)
-        var res = mutableListOf<Double>()
-        val dividend = listOfCoeffs.toDoubleArray()
-        for (i in 0..this.degree() - other.degree()) {
-            val degreeOfAnswer = dividend[i] / other.coeff()
-            res.add(degreeOfAnswer)
-            val curSubtrahend = DoubleArray(other.degree() + 1)
-            for (i in 0..curSubtrahend.size) {
-                curSubtrahend = other.[other.degree() - i] * curSubtrahend
+        val res = mutableListOf<Double>()
+        val dividend = coeffs
+        val thisDegree = this.degree()
+        val otherDegree = other.degree()
+        if (thisDegree < otherDegree) return Polynom(0.0)
+        for (pos in 0..(thisDegree - otherDegree)) {
+            val currentAnswer = dividend[pos] / other.coeff(otherDegree)
+            res.add(currentAnswer)
+            val curSubtrahend = DoubleArray(otherDegree + 1)
+            for (i in curSubtrahend.indices) {
+                curSubtrahend[i] = other.coeffs[otherDegree - i] * currentAnswer
             }
-            res += Polynom(*answer.toDoubleArray())
-            dividend -= divider * Polynom(*answer.toDoubleArray())
-            i -= 1
+            for (i in 0..otherDegree) {
+                dividend[i + pos] -= curSubtrahend[i]
+            }
         }
-        return res
+        return Polynom(*res.toDoubleArray())
     }
 
 
