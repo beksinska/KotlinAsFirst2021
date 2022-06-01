@@ -27,22 +27,16 @@ class OpenHashSet<T>(val capacity: Int) {
      */
     val size: Int
         get() {
-            when (capacity) {
-                0 -> {
-                    return 0
-                }
-                else -> {
-                    for (index in 0 until capacity) {
-                        when {
-                            elements[index] == null -> {
-                                return index
-                            }
-                        }
+            for (i in 0 until capacity) {
+                when {
+                    elements[i] == null -> {
+                        return i
                     }
-                    return capacity
                 }
             }
+            return capacity
         }
+
 
     /**
      * Признак пустоты
@@ -56,15 +50,13 @@ class OpenHashSet<T>(val capacity: Int) {
      */
 
     fun add(element: T): Boolean {
-        for (index in 0 until capacity) {
-            when {
-                elements[index] == null -> {
-                    elements[index] = element
-                    return true
-                }
-                elements[index] == element -> {
-                    return false
-                }
+        for (i in 0 until capacity) when {
+            elements[i] == element -> {
+                return false
+            }
+            elements[i] == null -> {
+                elements[i] = element
+                return true
             }
         }
         return false
@@ -74,16 +66,13 @@ class OpenHashSet<T>(val capacity: Int) {
      * Проверка, входит ли заданный элемент в хеш-таблицу
      */
     operator fun contains(element: T): Boolean {
-        for (i in 0 .. capacity + 1) {
-            when {
-                elements[i] == element -> {
-                    return true
-                }
-                elements[i] == null -> {
-                    return false
-                }
+        for (i in 0 until capacity) when {
+            elements[i] == element -> {
+                return true
             }
-
+            elements[i] == null -> {
+                return false
+            }
         }
         return false
     }
@@ -93,12 +82,12 @@ class OpenHashSet<T>(val capacity: Int) {
      * и любой элемент из второй таблицы входит также и в первую
      */
     override fun equals(other: Any?): Boolean {
-        if (other !is OpenHashSet<*> || size != other.size) {
+        if ((other !is OpenHashSet<*>) || (size != other.size)) {
             return false
         }
-        for (index in 0 until size) {
+        for (i in 0 until size) {
             when {
-                elements[index] != other.elements[index] -> {
+                elements[i] != other.elements[i] -> {
                     return false
                 }
             }
@@ -109,9 +98,9 @@ class OpenHashSet<T>(val capacity: Int) {
 
     override fun hashCode(): Int {
         var result = 0
-        for (element in elements) {
-            if (element != null) {
-                result += element.hashCode()
+        for (i in elements) {
+            if (i != null) {
+                result += i.hashCode()
             }
         }
         return result

@@ -24,10 +24,12 @@ import kotlin.math.pow
 class Polynom(private vararg val coeffs: Double) {
     private val listOfCoeffs = coeffs.toList().reversed()
 
+
     /**
      * Геттер: вернуть значение коэффициента при x^i
      */
     fun coeff(i: Int): Double = listOfCoeffs[i]
+
 
     /**
      * Расчёт значения при заданном x
@@ -39,6 +41,7 @@ class Polynom(private vararg val coeffs: Double) {
         }
         return res
     }
+
 
     /**
      * Степень (максимальная степень x при ненулевом слагаемом, например 2 для x^2+x+1).
@@ -55,21 +58,22 @@ class Polynom(private vararg val coeffs: Double) {
         return res
     }
 
+
     /**
      * Сложение
      */
     operator fun plus(other: Polynom): Polynom {
         val res = mutableListOf<Double>()
-        val min = minOf(other.degree(), listOfCoeffs.lastIndex)
+        val min = minOf(other.degree(), this.degree())
         for (i in 0..min) {
-            res += other.coeff(i) + listOfCoeffs[i]
+            res += other.coeff(i) + this.coeff(i)
         }
-        if (min == listOfCoeffs.lastIndex) {
-            for (i in listOfCoeffs.lastIndex + 1..other.degree())
+        if (min == this.degree()) {
+            for (i in this.degree() + 1..other.degree())
                 res += other.coeff(i)
         } else {
-            for (i in other.degree() + 1..listOfCoeffs.lastIndex)
-                res += listOfCoeffs[i]
+            for (i in other.degree() + 1..this.degree())
+                res += this.coeff(i)
         }
         return Polynom(*res.reversed().toDoubleArray())
     }
@@ -86,10 +90,12 @@ class Polynom(private vararg val coeffs: Double) {
         return Polynom(*res)
     }
 
+
     /**
      * Вычитание
      */
     operator fun minus(other: Polynom): Polynom = this + (-other)
+
 
     /**
      * Умножение
@@ -97,22 +103,23 @@ class Polynom(private vararg val coeffs: Double) {
     operator fun times(other: Polynom): Polynom {
         val thisCoeffs = listOfCoeffs.toMutableList()
         val otherCoeffs = other.listOfCoeffs.toMutableList()
-        val max = (thisCoeffs.size - 1) + (otherCoeffs.size - 1)
+        val max = (thisCoeffs.lastIndex) + (otherCoeffs.lastIndex)
         var listOfCalculations = doubleArrayOf()
         while (listOfCalculations.size != max + 1) {
             listOfCalculations += 0.0
         }
-        thisCoeffs.forEachIndexed { ind1, c1 ->
-            otherCoeffs.forEachIndexed { ind2, c2 ->
-                listOfCalculations[ind1 + ind2] += c1 * c2
+        thisCoeffs.forEachIndexed { thisDegree, thisCoeff ->
+            otherCoeffs.forEachIndexed { otherDegree, otherCoeff ->
+                listOfCalculations[thisDegree + otherDegree] += thisCoeff * otherCoeff
             }
         }
         var res = doubleArrayOf()
-        listOfCalculations.reversed().forEach { now ->
-            res += now
+        listOfCalculations.reversed().forEach { item ->
+            res += item
         }
         return Polynom(*res)
     }
+
 
     /**
      * Деление
@@ -149,19 +156,18 @@ class Polynom(private vararg val coeffs: Double) {
     operator fun rem(other: Polynom): Polynom = this - (other * (this / other))
 
 
+    /**
+     * Сравнение на равенство
+     */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
-        other as Polynom
-
-        if (listOfCoeffs != other.listOfCoeffs) return false
-
         return true
     }
 
-
+    /**
+     * Получение хеш-кода
+     */
     override fun hashCode(): Int = listOfCoeffs.hashCode()
-
 
 }
